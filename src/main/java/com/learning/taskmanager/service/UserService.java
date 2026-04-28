@@ -45,6 +45,16 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<UserSummaryDto> listUsersWithTaskCounts() {
-        return userRepository.findAllWithTaskCounts();
+        // TODO(exercise-03): this implementation has an N+1 problem.
+        // For each user it issues an additional COUNT query, so listing N users
+        // produces N+1 SQL statements. Optimize so the page renders in O(1) queries.
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(u -> new UserSummaryDto(
+                        u.getId(),
+                        u.getUsername(),
+                        u.getEmail(),
+                        taskRepository.countByAssigneeId(u.getId())))
+                .toList();
     }
 }
