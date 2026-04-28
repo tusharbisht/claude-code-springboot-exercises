@@ -6,7 +6,6 @@ import com.learning.taskmanager.dto.UserDto;
 import com.learning.taskmanager.dto.UserSummaryDto;
 import com.learning.taskmanager.service.TaskService;
 import com.learning.taskmanager.service.UserService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserRequest request) {
+    public ResponseEntity<UserDto> createUser(@RequestBody CreateUserRequest request) {
         UserDto created = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }

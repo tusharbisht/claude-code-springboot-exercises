@@ -6,7 +6,6 @@ import com.learning.taskmanager.dto.UpdateTaskRequest;
 import com.learning.taskmanager.model.TaskPriority;
 import com.learning.taskmanager.model.TaskStatus;
 import com.learning.taskmanager.service.TaskService;
-import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +33,7 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<TaskDto> createTask(@Valid @RequestBody CreateTaskRequest request) {
+    public ResponseEntity<TaskDto> createTask(@RequestBody CreateTaskRequest request) {
         TaskDto created = taskService.createTask(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
@@ -50,7 +49,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public TaskDto updateTask(@PathVariable Long id, @Valid @RequestBody UpdateTaskRequest request) {
+    public TaskDto updateTask(@PathVariable Long id, @RequestBody UpdateTaskRequest request) {
         return taskService.updateTask(id, request);
     }
 
