@@ -39,6 +39,7 @@ build/
 .claude/last-progress.json
 .claude/last-mvn.log
 .claude/session-log.jsonl
+.claude/settings.local.json
 SOLUTION_NOTES.md
 
 ### Grading transient state ###
