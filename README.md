@@ -35,6 +35,8 @@ These exercises don't measure Java output; they measure your **Claude Code confi
 | [`meta/02-hooks-and-commands`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/meta/02-hooks-and-commands) | slash commands + hooks | build `/find-controller`, `/test-changed`, and a `PreToolUse` hook that guards `pom.xml` |
 | [`meta/03-custom-subagent`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/meta/03-custom-subagent) | `.claude/agents/legacy-navigator.md` | encode the conventions of a legacy module so future sessions don't re-discover them |
 | [`meta/04-open-ended-feature`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/meta/04-open-ended-feature) | a working feature | open-ended task-labels feature; no failing test; an LLM judge walks through your API and scores you |
+| [`meta/05-mcp-servers`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/meta/05-mcp-servers) | a working MCP server | build a custom MCP server that exposes `list_endpoints` and `summarize_test_failures` to Claude as first-class tools |
+| [`meta/06-prompting-tactics`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/meta/06-prompting-tactics) | `SPEC.md` + a working feature | use spec-first → test-first → adversarial → constraint-shaped, in order, on a real feature |
 
 ### Going further
 
@@ -209,7 +211,9 @@ Then the meta track — these change *how* you'll use Claude going forward:
 11. `meta/01-build-claude-md` (60 min) — feel CLAUDE.md as a load-bearing document
 12. `meta/02-hooks-and-commands` (75 min) — slash commands and hooks as personal infrastructure
 13. `meta/03-custom-subagent` (75 min) — encode institutional knowledge as Claude Code config
-14. `meta/04-open-ended-feature` (90–180 min) — work without test oracles, with an LLM judge
+14. `meta/06-prompting-tactics` (90–120 min) — spec-first, test-first, adversarial, constraint-shaped
+15. `meta/05-mcp-servers` (90–120 min) — extend Claude's toolbelt with project-specific MCP servers
+16. `meta/04-open-ended-feature` (90–180 min) — work without test oracles, with an LLM judge
 
 Optional: `extra/multi-module-preview` (30 min) — practice cross-module navigation.
 
