@@ -11,7 +11,7 @@ A small Spring Boot REST API used as a playground for **learning Claude Code on 
 | `main` | reference — clean working app, all 19 tests green |
 | [`tour/workflow`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/tour/workflow) | 30-min guided walkthrough of Claude Code: plan mode, slash commands, hooks, IntelliJ, the Explore agent. Do this first. |
 
-### The exercises (each: own branch, `EXERCISE.md`, `CLAUDE_INSTRUCTIONS.md`)
+### Engineering exercises (each: own branch, `EXERCISE.md`, `CLAUDE_INSTRUCTIONS.md`)
 
 | Branch | Type | What you'll do |
 | --- | --- | --- |
@@ -23,6 +23,18 @@ A small Spring Boot REST API used as a playground for **learning Claude Code on 
 | [`exercise/06-tests-from-scratch`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/exercise/06-tests-from-scratch) | **tests + bugs** | write tests for an untested service; the tests will surface bugs |
 | [`exercise/07-migration`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/exercise/07-migration) | **migration** | migrate ad-hoc error responses to RFC 7807 ProblemDetail |
 | [`exercise/08-when-not-to-use-claude`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/exercise/08-when-not-to-use-claude) | **calibration** | a one-word fix; *don't* use Claude. Build the instinct. |
+| [`exercise/09-confident-but-wrong`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/exercise/09-confident-but-wrong) | **adversarial** | the visible test passes with Claude's first answer; the hidden grading suite catches what it missed |
+
+### Meta exercises — Claude Code itself is the deliverable
+
+These exercises don't measure Java output; they measure your **Claude Code configuration**. The Java task is the vehicle for surfacing what's missing.
+
+| Branch | Deliverable | What you'll build |
+| --- | --- | --- |
+| [`meta/01-build-claude-md`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/meta/01-build-claude-md) | `CLAUDE.md` | implement a feature without `CLAUDE.md`; the convention violations Claude makes are the bullets you need to add |
+| [`meta/02-hooks-and-commands`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/meta/02-hooks-and-commands) | slash commands + hooks | build `/find-controller`, `/test-changed`, and a `PreToolUse` hook that guards `pom.xml` |
+| [`meta/03-custom-subagent`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/meta/03-custom-subagent) | `.claude/agents/legacy-navigator.md` | encode the conventions of a legacy module so future sessions don't re-discover them |
+| [`meta/04-open-ended-feature`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/meta/04-open-ended-feature) | a working feature | open-ended task-labels feature; no failing test; an LLM judge walks through your API and scores you |
 
 ### Going further
 
@@ -161,11 +173,25 @@ export EVAL_WEBHOOK_URL=https://your-instructor.example.com/progress
 
 A reference webhook receiver lives in [`evaluation-server/`](evaluation-server/) (Python + stdlib, single file).
 
+### 4. Auto-generated `SOLUTION_NOTES.md` (always on)
+
+A separate set of hooks logs every prompt, edit, and bash command to `.claude/session-log.jsonl`, then folds it into `SOLUTION_NOTES.md` at the end of each session. The file is gitignored — its purpose is in-session **formative feedback**, not grading. After each session you'll see a one-line summary like:
+
+```
+[session] 7 prompts • 3 files edited • 4 mvn test runs → SOLUTION_NOTES.md updated
+```
+
+The notes file shows you, in retrospect, what your workflow with Claude actually looked like. Disable with `CLAUDE_DISABLE_SESSION_LOG=1` if you don't want it.
+
+### 5. LLM-judge grading (meta/04 only)
+
+`meta/04-open-ended-feature` has no failing test. Grading is an LLM that boots your app, walks through it as a user, and scores against a rubric. Requires `ANTHROPIC_API_KEY`. See the branch's [`EXERCISE.md`](https://github.com/tusharbisht/claude-code-springboot-exercises/blob/meta/04-open-ended-feature/EXERCISE.md) for details.
+
 ---
 
 ## Reading order recommendation
 
-For a self-paced learner aiming for ~6 hours total:
+For a self-paced learner aiming for ~10 hours total:
 
 1. `tour/workflow` (30 min) — orient yourself
 2. `exercise/08-when-not-to-use-claude` (5 min) — calibrate first
@@ -173,12 +199,19 @@ For a self-paced learner aiming for ~6 hours total:
 4. `exercise/03-optimize-n-plus-one` (30 min) — see the SQL Claude shows you
 5. `exercise/02-implement-search` (45 min) — multi-layer plan-mode practice
 6. `exercise/04-refactor-fat-controller` (45 min) — disciplined refactor with tests
-7. `exercise/06-tests-from-scratch` (75 min) — the highest-ROI workflow
-8. `exercise/05-investigate-vague-symptom` (60 min) — production-shaped, no hand-holding
-9. `exercise/07-migration` (75 min) — the most realistic real-world Claude use case
-10. `extra/multi-module-preview` (30 min) — practice cross-module navigation
+7. `exercise/06-tests-from-scratch` (75 min) — highest-ROI Claude workflow
+8. `exercise/09-confident-but-wrong` (45 min) — the most-important calibration exercise
+9. `exercise/05-investigate-vague-symptom` (60 min) — production-shaped, no hand-holding
+10. `exercise/07-migration` (75 min) — the most realistic real-world Claude use case
 
-Order 8 and 9 are interchangeable. Skip 10 if you only ever work in single-module projects.
+Then the meta track — these change *how* you'll use Claude going forward:
+
+11. `meta/01-build-claude-md` (60 min) — feel CLAUDE.md as a load-bearing document
+12. `meta/02-hooks-and-commands` (75 min) — slash commands and hooks as personal infrastructure
+13. `meta/03-custom-subagent` (75 min) — encode institutional knowledge as Claude Code config
+14. `meta/04-open-ended-feature` (90–180 min) — work without test oracles, with an LLM judge
+
+Optional: `extra/multi-module-preview` (30 min) — practice cross-module navigation.
 
 ---
 
