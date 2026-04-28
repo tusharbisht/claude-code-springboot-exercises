@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -68,5 +70,18 @@ public class TaskController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dueBefore,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dueAfter) {
         return taskService.search(status, priority, assigneeId, dueBefore, dueAfter);
+    }
+
+    /**
+     * Group all tasks by their priority. Returns a map keyed by TaskPriority
+     * (LOW/MEDIUM/HIGH); each value is the list of tasks at that priority,
+     * ordered by id ascending.
+     *
+     * Every priority key MUST appear in the response, even if empty.
+     */
+    @GetMapping("/by-priority")
+    public Map<TaskPriority, List<TaskDto>> tasksByPriority() {
+        // TODO(meta-01): implement.
+        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "by-priority not implemented yet");
     }
 }
