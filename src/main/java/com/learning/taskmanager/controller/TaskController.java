@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -67,6 +68,9 @@ public class TaskController {
             @RequestParam(required = false) Long assigneeId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dueBefore,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dueAfter) {
-        return taskService.search(status, priority, assigneeId, dueBefore, dueAfter);
+        // TODO(exercise-02): implement search.
+        // The endpoint shape, query params, and TaskApiIntegrationTest cases describe the contract.
+        // You will likely need to add the underlying repository query and a service method too.
+        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "search is not implemented yet");
     }
 }

@@ -1,12 +1,8 @@
 package com.learning.taskmanager.repository;
 
 import com.learning.taskmanager.model.Task;
-import com.learning.taskmanager.model.TaskPriority;
-import com.learning.taskmanager.model.TaskStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
@@ -15,17 +11,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     long countByAssigneeId(Long assigneeId);
 
-    @Query("""
-            SELECT t FROM Task t
-            WHERE (:status IS NULL OR t.status = :status)
-              AND (:priority IS NULL OR t.priority = :priority)
-              AND (:assigneeId IS NULL OR t.assignee.id = :assigneeId)
-              AND (:dueBefore IS NULL OR t.dueDate <= :dueBefore)
-              AND (:dueAfter IS NULL OR t.dueDate >= :dueAfter)
-            """)
-    List<Task> search(TaskStatus status,
-                      TaskPriority priority,
-                      Long assigneeId,
-                      LocalDate dueBefore,
-                      LocalDate dueAfter);
+    // TODO(exercise-02): add a query method that supports filtering tasks by an
+    // arbitrary combination of: status, priority, assignee, and a due-date range
+    // (inclusive on both ends). Any subset of those filters may be supplied —
+    // missing ones must not constrain the result.
 }

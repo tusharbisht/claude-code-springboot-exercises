@@ -13,7 +13,6 @@ import com.learning.taskmanager.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -93,15 +92,7 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-    @Transactional(readOnly = true)
-    public List<TaskDto> search(TaskStatus status,
-                                TaskPriority priority,
-                                Long assigneeId,
-                                LocalDate dueBefore,
-                                LocalDate dueAfter) {
-        return taskRepository.search(status, priority, assigneeId, dueBefore, dueAfter)
-                .stream().map(TaskDto::from).toList();
-    }
+    // TODO(exercise-02): add a `search` method here that the controller can call.
 
     private Task findOrThrow(Long id) {
         return taskRepository.findById(id)
