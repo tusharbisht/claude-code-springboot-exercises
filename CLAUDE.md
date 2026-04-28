@@ -8,26 +8,33 @@ A small Spring Boot REST task manager used as a teaching playground for Claude C
 
 ## Stack
 
-- Java 21, Spring Boot 3.3.5, Maven (single module)
+- Java 21, Spring Boot 3.3.5, Maven (**multi-module — domain / persistence / web**)
 - Spring Web + Spring Data JPA + Spring Validation
 - H2 in-memory database for runtime and tests
 - JUnit 5 + Spring's `MockMvc` for tests
 
 ## Source layout
 
-```
-src/main/java/com/learning/taskmanager/
-├── TaskManagerApplication.java    # Spring Boot entrypoint
-├── controller/                    # REST endpoints — thin, delegate to services
-├── service/                       # business logic + @Transactional boundaries
-├── repository/                    # Spring Data JPA interfaces
-├── model/                         # JPA entities + enums
-├── dto/                           # request/response DTOs (records where possible)
-└── exception/                     # custom exceptions + GlobalExceptionHandler
+This branch is split into three Maven modules. See `MULTI_MODULE_NOTES.md` for the why and how.
 
-src/test/java/com/learning/taskmanager/
-├── integration/   # @SpringBootTest + MockMvc — these are the "visible" tests
-└── TaskManagerApplicationTests.java
+```
+.
+├── pom.xml                        # parent (packaging=pom)
+├── domain/src/main/java/com/learning/taskmanager/
+│   ├── model/                     # JPA entities + enums
+│   └── dto/                       # request/response DTOs
+├── persistence/src/main/java/com/learning/taskmanager/
+│   └── repository/                # Spring Data JPA interfaces
+└── web/src/
+    ├── main/java/com/learning/taskmanager/
+    │   ├── TaskManagerApplication.java    # Spring Boot entrypoint
+    │   ├── controller/            # REST endpoints — thin, delegate to services
+    │   ├── service/               # business logic + @Transactional boundaries
+    │   └── exception/             # custom exceptions + GlobalExceptionHandler
+    ├── main/resources/application.properties
+    └── test/java/com/learning/taskmanager/
+        ├── integration/           # @SpringBootTest + MockMvc tests
+        └── TaskManagerApplicationTests.java
 ```
 
 ## Conventions to follow when editing
@@ -62,8 +69,9 @@ src/test/java/com/learning/taskmanager/
 ## Useful one-liners
 
 ```bash
-mvn -Dtest=ClassName test                          # run a single test class
-mvn -Dtest=ClassName#methodName test               # run a single test method
+mvn -Dtest=ClassName test                          # run a single test class (across modules)
+mvn -pl web -am test                               # build/test the `web` module + its deps only
+mvn -pl domain test                                # test just the domain module
 mvn dependency:tree | grep -i <artifact>           # find what pulls in a dep
 ./grading/run-grading.sh exercise/02-implement-search  # run hidden grading explicitly
 ```
