@@ -44,3 +44,4 @@ SOLUTION_NOTES.md
 ### Grading transient state ###
 grading-result.json
 src/test/java/com/learning/taskmanager/grading/
+.judge-app.log
