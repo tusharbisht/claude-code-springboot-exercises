@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "codebase-tools": {
+      "command": "python3",
+      "args": [".claude/mcp-servers/codebase_tools.py"]
+    }
+  }
+}

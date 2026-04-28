@@ -44,3 +44,6 @@ SOLUTION_NOTES.md
 ### Grading transient state ###
 grading-result.json
 src/test/java/com/learning/taskmanager/grading/
+
+### Local MCP server state (don't commit secrets) ###
+.mcp.json.local
