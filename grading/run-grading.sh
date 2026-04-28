@@ -5,6 +5,10 @@
 #   ./grading/run-grading.sh                       # auto-detect current branch
 #   ./grading/run-grading.sh exercise/01-fix-validation-bug
 #
+# Branch -> grading dir is derived automatically: an `exercise/<slug>` branch
+# loads tests from `grading/exercise-<slug>/`. Drop a new directory in and the
+# runner picks it up — no edit here needed.
+#
 # Exits 0 if all grading tests pass, non-zero otherwise.
 # Always emits grading-result.json in the project root.
 
@@ -13,30 +17,26 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
-BRANCH="${1:-$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)}"
+BRANCH="${1:-$(git branch --show-current 2>/dev/null || echo unknown)}"
+[ -z "$BRANCH" ] && BRANCH="unknown"
 
-case "$BRANCH" in
-  exercise/01-fix-validation-bug|01-fix-validation-bug)
-    EXERCISE_DIR="exercise-01-fix-validation-bug"
-    ;;
-  exercise/02-implement-search|02-implement-search)
-    EXERCISE_DIR="exercise-02-implement-search"
-    ;;
-  exercise/03-optimize-n-plus-one|03-optimize-n-plus-one)
-    EXERCISE_DIR="exercise-03-optimize-n-plus-one"
-    ;;
-  exercise/04-refactor-fat-controller|04-refactor-fat-controller)
-    EXERCISE_DIR="exercise-04-refactor-fat-controller"
-    ;;
-  main)
-    echo "Branch is 'main' — nothing to grade. Switch to an exercise/* branch."
-    exit 0
-    ;;
-  *)
-    echo "ERROR: branch '$BRANCH' is not a recognized exercise branch."
-    exit 2
-    ;;
-esac
+if [ "$BRANCH" = "main" ]; then
+  echo "Branch is 'main' — nothing to grade. Switch to an exercise/* branch."
+  exit 0
+fi
+
+# Strip an optional "exercise/" prefix; the directory name is "exercise-<slug>".
+SLUG="${BRANCH#exercise/}"
+EXERCISE_DIR="exercise-${SLUG}"
+
+if [ ! -d "$ROOT_DIR/grading/$EXERCISE_DIR" ]; then
+  echo "ERROR: no grading directory for branch '$BRANCH' (looked for grading/$EXERCISE_DIR)" >&2
+  echo "Available exercises:" >&2
+  for d in "$ROOT_DIR"/grading/exercise-*/; do
+    [ -d "$d" ] && echo "  - $(basename "$d")" >&2
+  done
+  exit 2
+fi
 
 echo "→ grading branch: $BRANCH"
 echo "→ exercise dir:   grading/$EXERCISE_DIR"
