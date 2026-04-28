@@ -1,5 +1,7 @@
 package com.learning.taskmanager.controller;
 
+import com.learning.taskmanager.dto.BulkCreateTasksRequest;
+import com.learning.taskmanager.dto.BulkCreateTasksResponse;
 import com.learning.taskmanager.dto.CreateTaskRequest;
 import com.learning.taskmanager.dto.TaskDto;
 import com.learning.taskmanager.dto.UpdateTaskRequest;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -37,6 +40,20 @@ public class TaskController {
     public ResponseEntity<TaskDto> createTask(@Valid @RequestBody CreateTaskRequest request) {
         TaskDto created = taskService.createTask(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    /**
+     * Atomic bulk-create. The contract says: either every task in the request
+     * is persisted OR no tasks are persisted. Validation failures, missing
+     * assignees, and DB errors must roll the whole batch back.
+     *
+     * The visible test only covers the happy path (all tasks valid).
+     * The hidden grading suite covers atomicity. Read carefully.
+     */
+    @PostMapping("/bulk")
+    public ResponseEntity<BulkCreateTasksResponse> bulkCreate(@Valid @RequestBody BulkCreateTasksRequest request) {
+        // TODO(exercise-09): implement.
+        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "bulk create not implemented yet");
     }
 
     @GetMapping
