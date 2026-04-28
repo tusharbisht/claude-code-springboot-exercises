@@ -46,6 +46,9 @@ bash "$ROOT_DIR/grading/scripts/stage-tests.sh" "$EXERCISE_DIR"
 # Make sure we always unstage, even if mvn fails.
 trap 'bash "$ROOT_DIR/grading/scripts/unstage-tests.sh" || true' EXIT
 
+# Clear stale surefire reports so we count only this run.
+rm -rf "$ROOT_DIR/target/surefire-reports" 2>/dev/null
+
 set +e
 mvn -B -q test
 MVN_EXIT=$?
