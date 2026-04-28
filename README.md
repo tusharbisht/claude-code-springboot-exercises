@@ -1,18 +1,34 @@
 # Task Manager — Claude Code Exercises (Java + Spring Boot)
 
-A small Spring Boot REST API used as a playground for **learning to use Claude Code on a real Java codebase**. Each exercise lives on its own branch and represents a category of problem you'll regularly meet in production Spring Boot work:
+A small Spring Boot REST API used as a playground for **learning Claude Code on a real Java codebase**. Each branch is one teaching scenario. Work them in order, or pick the one that matches what you're avoiding at work.
+
+## Branch map
+
+### Start here
+
+| Branch | Purpose |
+| --- | --- |
+| `main` | reference — clean working app, all 19 tests green |
+| [`tour/workflow`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/tour/workflow) | 30-min guided walkthrough of Claude Code: plan mode, slash commands, hooks, IntelliJ, the Explore agent. Do this first. |
+
+### The exercises (each: own branch, `EXERCISE.md`, `CLAUDE_INSTRUCTIONS.md`)
 
 | Branch | Type | What you'll do |
 | --- | --- | --- |
-| `main` | reference | clean working app, all tests green |
-| `exercise/01-fix-validation-bug` | **fix** | a bug lets invalid input slip through; tests fail |
-| `exercise/02-implement-search` | **implement** | endpoint exists but throws `NOT_IMPLEMENTED`; tests describe the contract |
-| `exercise/03-optimize-n-plus-one` | **optimize** | list endpoint runs an N+1 query pattern; a test asserts query count |
-| `exercise/04-refactor-fat-controller` | **refactor** | controller does business logic; tests stay green, structure must improve |
+| [`exercise/01-fix-validation-bug`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/exercise/01-fix-validation-bug) | **fix** | a bug lets invalid input slip through; tests fail |
+| [`exercise/02-implement-search`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/exercise/02-implement-search) | **implement** | endpoint exists but throws `NOT_IMPLEMENTED`; tests describe the contract |
+| [`exercise/03-optimize-n-plus-one`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/exercise/03-optimize-n-plus-one) | **optimize** | list endpoint runs an N+1 query pattern; a test asserts query count |
+| [`exercise/04-refactor-fat-controller`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/exercise/04-refactor-fat-controller) | **refactor** | controller does business logic; tests stay green, structure must improve |
+| [`exercise/05-investigate-vague-symptom`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/exercise/05-investigate-vague-symptom) | **investigate** | a vague bug report; no TODO markers; you script the repro |
+| [`exercise/06-tests-from-scratch`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/exercise/06-tests-from-scratch) | **tests + bugs** | write tests for an untested service; the tests will surface bugs |
+| [`exercise/07-migration`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/exercise/07-migration) | **migration** | migrate ad-hoc error responses to RFC 7807 ProblemDetail |
+| [`exercise/08-when-not-to-use-claude`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/exercise/08-when-not-to-use-claude) | **calibration** | a one-word fix; *don't* use Claude. Build the instinct. |
 
-Each exercise branch ships with two docs:
-- `EXERCISE.md` — what's broken / missing, how to verify
-- `CLAUDE_INSTRUCTIONS.md` — how to solve it **faster and better with Claude Code**
+### Going further
+
+| Branch | Purpose |
+| --- | --- |
+| [`extra/multi-module-preview`](https://github.com/tusharbisht/claude-code-springboot-exercises/tree/extra/multi-module-preview) | the same app split into 3 Maven modules — practice cross-module navigation |
 
 ---
 
@@ -25,12 +41,10 @@ You'll get the most out of these exercises if you can:
 
 You do **not** need to be a Spring expert. The point is to learn how to use Claude Code to navigate, diagnose and change a Java codebase — not to memorize Spring annotations.
 
----
-
 ## Prerequisites
 
 - **JDK 21+** (we tested on 21 and 25)
-- **Maven 3.9+** (or use the bundled `./mvnw` wrapper if your fork has one)
+- **Maven 3.9+**
 - **Git** and a terminal
 - **[Claude Code](https://docs.claude.com/en/docs/claude-code/overview)** installed and authenticated
 
@@ -45,50 +59,28 @@ claude --version # should print a version string
 ## Getting started
 
 ```bash
-# 1. clone your fork
-git clone https://github.com/<your-username>/claude-code-springboot-exercises.git
+# 1. clone
+git clone https://github.com/tusharbisht/claude-code-springboot-exercises.git
 cd claude-code-springboot-exercises
 
-# 2. confirm the reference branch builds and tests pass
+# 2. confirm main is green
 git checkout main
-mvn test
-# → expect: Tests run: 19, Failures: 0, Errors: 0
+mvn test                # → Tests run: 19, Failures: 0
 
-# 3. start the app locally (optional — the tests do the same thing in-memory)
-mvn spring-boot:run
-# → http://localhost:8080/api/tasks
-# → H2 console: http://localhost:8080/h2-console (jdbc:h2:mem:taskdb, user 'sa', empty password)
+# 3. start with the workflow tour
+git checkout tour/workflow
+cat WORKFLOW_TOUR.md
+claude                  # launch Claude Code in this dir
+
+# 4. then pick an exercise
+git checkout exercise/01-fix-validation-bug
+cat EXERCISE.md
+mvn test                # see which tests fail — that's your starting point
+cat CLAUDE_INSTRUCTIONS.md
+claude
 ```
 
-### Picking an exercise
-
-```bash
-git checkout exercise/01-fix-validation-bug   # or 02 / 03 / 04
-cat EXERCISE.md          # read the problem description first
-mvn test                 # see which tests fail — that's your starting point
-cat CLAUDE_INSTRUCTIONS.md  # read this BEFORE you launch Claude Code
-claude                   # launch Claude Code in the project root
-```
-
-When the listed failing tests turn green, you're done with the basic check. Push your branch and CI will run a stricter, hidden grading suite (see **Grading** below).
-
----
-
-## How to use Claude Code on these exercises
-
-These exercises are designed to teach a specific workflow:
-
-1. **Read `EXERCISE.md` first.** Understand the problem in your own head before delegating it.
-2. **Run the failing tests.** See the actual error message. This is what you'll show Claude.
-3. **Open Claude Code in the repo root** so it can use the codebase context.
-4. **Ask focused questions, not "fix it all."** Examples:
-   - "Run `mvn test` and tell me which assertions are failing and why."
-   - "Find every place in the codebase where `@Valid` is used. Compare with where it *should* be used."
-   - "Show me the SQL Hibernate generates when I call `GET /api/users`. Is there an N+1 problem?"
-5. **Use plan mode (`Shift+Tab`)** for the refactor exercise — let Claude propose the structure before editing.
-6. **Verify with `mvn test` after each change.** Don't accept "should work" — *prove* it.
-
-Each `CLAUDE_INSTRUCTIONS.md` walks through the *specific* Claude Code techniques most useful for that exercise (search agents, plan mode, parallel reads, git diff verification).
+When the listed failing tests turn green, push your branch. CI runs a stricter, hidden grading suite (see **Grading** below).
 
 ---
 
@@ -106,9 +98,11 @@ src/
 │   └── exception/                      # custom exceptions + global handler
 ├── main/resources/application.properties
 └── test/java/com/learning/taskmanager/
-    ├── integration/                    # MockMvc-based API tests (visible to learners)
+    ├── integration/                    # MockMvc-based API tests (visible)
     └── TaskManagerApplicationTests.java
 ```
+
+(Multi-module layout on `extra/multi-module-preview` is documented in `MULTI_MODULE_NOTES.md` on that branch.)
 
 ### Domain model
 
@@ -135,38 +129,56 @@ GET    /api/tasks/search       search by status/priority/assignee/due date
 
 ## Grading & evaluation
 
-Each exercise has two layers of tests:
+Three layers, in increasing strictness:
 
 ### 1. Local correctness check (visible)
 
-The tests under `src/test/java/...` are the ones you see and run with `mvn test`. They tell you **whether the surface-level requirement is met**. When they pass, push your branch.
+Tests under `src/test/java/...` are visible to learners and run with `mvn test`. They tell you whether the surface-level requirement is met. When they pass, push.
 
 ### 2. Hidden grading suite (CI)
 
-When you push to GitHub, the workflow `.github/workflows/grade.yml` runs a **stricter, hidden test suite** that exercises edge cases the visible tests don't (boundary conditions, query counts, spec compliance). The grading job:
+When you push, [`.github/workflows/grade.yml`](.github/workflows/grade.yml) runs a stricter, hidden test suite from `grading/<exercise-slug>/`. The job:
 
-- Loads the hidden tests from `grading/<exercise-slug>/` into `src/test/java/...` before running
+- Loads the hidden tests into `src/test/java/...` before running
 - Posts results as a comment on the pull request and uploads a JSON report as an artifact
-- Optionally posts to a webhook (set `EVAL_WEBHOOK_URL` as a repo secret) so an instructor can track class-wide progress
+- Optionally POSTs to a webhook (set `EVAL_WEBHOOK_URL` as a repo secret) so an instructor can track class-wide progress
 
 You can run the same grading locally:
 
 ```bash
-./grading/run-grading.sh exercise/01-fix-validation-bug
+./grading/run-grading.sh
+# or for a specific branch:
+./grading/run-grading.sh exercise/03-optimize-n-plus-one
 ```
 
 ### 3. Claude Code progress hooks (optional)
 
-The repo's `.claude/settings.json` registers a `Stop` hook that — after each Claude Code session — runs `mvn test` and POSTs a small JSON payload (branch, pass/fail counts, duration) to the URL in `$EVAL_WEBHOOK_URL`. If the env var isn't set, the hook does nothing. This is meant for cohort-style learning, not solo practice.
-
-To enable:
+The repo's [`.claude/settings.json`](.claude/settings.json) registers a `Stop` hook that — after each Claude Code session — runs `mvn test` and POSTs a small JSON payload (branch, pass/fail counts, duration) to the URL in `$EVAL_WEBHOOK_URL`. If the env var isn't set, the hook does nothing.
 
 ```bash
 export EVAL_WEBHOOK_URL=https://your-instructor.example.com/progress
-# Claude Code will pick up .claude/settings.json automatically
 ```
 
-A reference webhook receiver lives in `evaluation-server/` (Python + Flask, single file).
+A reference webhook receiver lives in [`evaluation-server/`](evaluation-server/) (Python + stdlib, single file).
+
+---
+
+## Reading order recommendation
+
+For a self-paced learner aiming for ~6 hours total:
+
+1. `tour/workflow` (30 min) — orient yourself
+2. `exercise/08-when-not-to-use-claude` (5 min) — calibrate first
+3. `exercise/01-fix-validation-bug` (15 min) — easy win, builds the diagnose loop
+4. `exercise/03-optimize-n-plus-one` (30 min) — see the SQL Claude shows you
+5. `exercise/02-implement-search` (45 min) — multi-layer plan-mode practice
+6. `exercise/04-refactor-fat-controller` (45 min) — disciplined refactor with tests
+7. `exercise/06-tests-from-scratch` (75 min) — the highest-ROI workflow
+8. `exercise/05-investigate-vague-symptom` (60 min) — production-shaped, no hand-holding
+9. `exercise/07-migration` (75 min) — the most realistic real-world Claude use case
+10. `extra/multi-module-preview` (30 min) — practice cross-module navigation
+
+Order 8 and 9 are interchangeable. Skip 10 if you only ever work in single-module projects.
 
 ---
 
@@ -176,17 +188,17 @@ A reference webhook receiver lives in `evaluation-server/` (Python + Flask, sing
 
 **Port 8080 already in use** → `lsof -i :8080`, kill the offender, or set `server.port=8090` in `application.properties`.
 
-**H2 console rejects empty password** → leave the password field blank and click *Connect* (no quotes).
+**H2 console rejects empty password** → leave the password field blank and click *Connect*.
 
-**Tests pass locally but CI grading fails** → that's the point. The hidden tests cover edge cases. Read the CI logs.
+**Tests pass locally but CI grading fails** → that's the point. Hidden tests cover edge cases. Read the CI logs.
 
 ---
 
 ## Contributing / forking
 
-This repo is meant to be forked and extended. Add new exercises by:
-1. Creating a new branch from `main`: `git checkout -b exercise/05-<your-slug>`
+Add new exercises by:
+1. Branching from `main`: `git checkout -b exercise/NN-<your-slug>`
 2. Mutating the code to introduce the issue + the failing visible test
 3. Adding `EXERCISE.md` and `CLAUDE_INSTRUCTIONS.md`
-4. Adding a hidden test set under `grading/exercise-05-<your-slug>/`
+4. Adding a hidden test set under `grading/exercise-NN-<your-slug>/` (the runner picks it up automatically — no edit to `run-grading.sh` needed)
 5. Updating the table at the top of this README
