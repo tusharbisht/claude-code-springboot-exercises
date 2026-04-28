@@ -14,6 +14,12 @@ if [ ! -d "$SRC" ]; then
   exit 1
 fi
 
+shopt -s nullglob
+JAVA_FILES=("$SRC"/*.java)
+if [ ${#JAVA_FILES[@]} -eq 0 ]; then
+  echo "→ no hidden grading tests for $SRC (visible tests are the source of truth)"
+  exit 0
+fi
 mkdir -p "$DEST"
-cp "$SRC"/*.java "$DEST/"
-echo "→ staged grading tests from $SRC into $DEST"
+cp "${JAVA_FILES[@]}" "$DEST/"
+echo "→ staged ${#JAVA_FILES[@]} grading test file(s) from $SRC into $DEST"
