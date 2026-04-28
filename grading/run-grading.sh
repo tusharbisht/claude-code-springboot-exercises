@@ -25,15 +25,18 @@ if [ "$BRANCH" = "main" ]; then
   exit 0
 fi
 
-# Strip an optional "exercise/" prefix; the directory name is "exercise-<slug>".
-SLUG="${BRANCH#exercise/}"
-EXERCISE_DIR="exercise-${SLUG}"
+# Map branch -> directory by replacing '/' with '-'.
+#   exercise/05-foo  -> exercise-05-foo
+#   meta/01-bar      -> meta-01-bar
+EXERCISE_DIR="${BRANCH//\//-}"
 
 if [ ! -d "$ROOT_DIR/grading/$EXERCISE_DIR" ]; then
   echo "ERROR: no grading directory for branch '$BRANCH' (looked for grading/$EXERCISE_DIR)" >&2
   echo "Available exercises:" >&2
-  for d in "$ROOT_DIR"/grading/exercise-*/; do
-    [ -d "$d" ] && echo "  - $(basename "$d")" >&2
+  for d in "$ROOT_DIR"/grading/*/; do
+    name="$(basename "$d")"
+    [ "$name" = "scripts" ] && continue
+    [ -d "$d" ] && echo "  - $name" >&2
   done
   exit 2
 fi
