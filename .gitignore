@@ -38,6 +38,8 @@ build/
 ### Claude Code hook artifacts ###
 .claude/last-progress.json
 .claude/last-mvn.log
+.claude/session-log.jsonl
+SOLUTION_NOTES.md
 
 ### Grading transient state ###
 grading-result.json
